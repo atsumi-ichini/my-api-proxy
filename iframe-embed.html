@@ -1,0 +1,53 @@
+<!-- iframeで埋め込むコード例 -->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API埋め込み例</title>
+</head>
+<body>
+    <h1>YouTube動画一覧</h1>
+    
+    <!-- 方法1: 直接APIを呼び出してiframeで表示 -->
+    <div id="video-container"></div>
+    
+    <script>
+        // APIから動画データを取得してiframeで表示
+        async function loadVideos() {
+            try {
+                const response = await fetch('https://my-api-proxy-xi.vercel.app/api/sheets?sheet=motegi&limit=10');
+                const data = await response.json();
+                
+                if (data.ok && data.items) {
+                    const container = document.getElementById('video-container');
+                    
+                    data.items.forEach(video => {
+                        // YouTube埋め込み用のiframeを作成
+                        const iframe = document.createElement('iframe');
+                        iframe.src = `https://www.youtube.com/embed/${video.videoId}`;
+                        iframe.width = '560';
+                        iframe.height = '315';
+                        iframe.frameBorder = '0';
+                        iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+                        iframe.allowFullscreen = true;
+                        iframe.style.margin = '10px';
+                        
+                        // タイトルを表示
+                        const title = document.createElement('h3');
+                        title.textContent = video.title;
+                        
+                        container.appendChild(title);
+                        container.appendChild(iframe);
+                    });
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+        
+        // ページ読み込み時に実行
+        loadVideos();
+    </script>
+</body>
+</html>
