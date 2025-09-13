@@ -25,6 +25,9 @@ export default async function handler(req, res) {
     // 誰でもこのAPIを使えるようにするおまじない
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Content-Type', 'application/json');
+    
+    // キャッシュ設定（5分間キャッシュ）
+    res.setHeader('Cache-Control', 'public, max-age=300, s-maxage=300');
 
     // スプレッドシートAPIからの結果を、そのままウェブサイトに返します
     res.status(response.status).json(data);
